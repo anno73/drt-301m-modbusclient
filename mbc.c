@@ -173,8 +173,8 @@ char *optSerialParms = NULL;
 char *optSerialDevice = NULL;
 unsigned int *optRegsToDump = NULL;
 int countRegs = 0;
-int optByteTimeout = 1000;		// in ms
-int optResponseTimeout = 5000;	// in ms
+struct timeval *optByteTimeout = NULL;
+struct timeval *optResponseTimeout = NULL;
 
 struct timeval byteTimeout, responseTimeout;
 
@@ -535,24 +535,24 @@ int main(int argc, char *argv[])
 	for (int i = 1; i < argc; i++)
 	{	// Process commandline parameters
 		if (optVerbose > 3)
-			printf("%d|%d : %s.\n", argc, i, argv[i]);
+			printf("Process commandline arg: argc=%d argv[%d]=%s.\n", argc, i, argv[i]);
 	
 		if (strncmp(argv[i], "-v", 2) == 0)
 			optVerbose ++;
 
-		else if (strncmp(argv[i], "-u", 2) == 0)
+		else if (strcmp(argv[i], "-u") == 0)
 			optUnit ++;
 
-		else if (strncmp(argv[i], "-t", 2) == 0)
+		else if (strcmp(argv[i], "-t") == 0)
 			optTitle ++;
 
-		else if (strncmp(argv[i], "-l", 2) == 0)
+		else if (strcmp(argv[i], "-l") == 0)
 			dumpRegDef();	// does not return
 
-		else if (strncmp(argv[i], "-setDate", 8) == 0)
+		else if (strcmp(argv[i], "-setDate") == 0)
 			optSetDate ++;
 
-		else if (strncmp(argv[i], "-setBaudrate", 12) == 0)
+		else if (strcmp(argv[i], "-setBaudrate") == 0)
 		{
 			if (argc - i > 1)
 			{
@@ -568,11 +568,11 @@ int main(int argc, char *argv[])
 			}
 		}
 			
-		else if (strncmp(argv[i], "-h", 2) == 0)
+		else if (strcmp(argv[i], "-h") == 0)
 			optHelp ++;
 
 		
-		else if (strncmp(argv[i], "-s", 2) == 0)
+		else if (strcmp(argv[i], "-s") == 0)
 		{	// Set serial parameters
 			printf("-s not implemented yet\n"); abort();
 			
@@ -589,7 +589,7 @@ int main(int argc, char *argv[])
 		}
 
 		
-		else if (strncmp(argv[i], "-i", 2) == 0)
+		else if (strcmp(argv[i], "-i") == 0)
 		{	// Set serial device
 			if (argc - i > 1)
 			{
@@ -610,7 +610,7 @@ int main(int argc, char *argv[])
 		}
 		
 		
-		else if (strncmp(argv[i], "-r", 2) == 0)
+		else if (strcmp(argv[i], "-r") == 0)
 		{	// Dump registers
 			if (argc - i > 1)
 			{
@@ -621,7 +621,7 @@ int main(int argc, char *argv[])
 				if (optVerbose > 3)
 					printf("optRegsToDump: registers: %s\n", argv[i]);
 
-				countRegs = 0;
+//				countRegs = 0;
 				
 				char *cp = argv[i];
 				
@@ -668,7 +668,7 @@ int main(int argc, char *argv[])
 		}	// -r
 
 		
-		else if (strncmp(argv[i], "-R", 2) == 0)
+		else if (strcmp(argv[i], "-R") == 0)
 		{	// Print predefined report
 			if (argc - i > 1)
 			{
@@ -684,7 +684,54 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		
+		else if (strcmp(argv[i], "-bt") == 0)
+		{	// Print predefined report
+			if (argc - i > 1)
+			{
+				i++;
+				optByteTimeout = malloc(sizeof(*optByteTimeout));
+				if (! optByteTimeout)
+				{
+					printf("ERROR malloc optByteTimeout failed\n");
+					abort();
+				}
+				int millis = strtol(argv[i], NULL, 0);
+				optByteTimeout->tv_sec = millis / 1000;
+				optByteTimeout->tv_usec = (millis % 1000) * 1000;	// micro seconds
+			}
+			
+			if (! optByteTimeout)
+			{
+				optHelp++;
+				i = argc;
+				break;
+			}
+		}
+
+		else if (strcmp(argv[i], "-rt") == 0)
+		{	// Print predefined report
+			if (argc - i > 1)
+			{
+				i++;
+				optResponseTimeout = malloc(sizeof(*optResponseTimeout));
+				if (! optResponseTimeout)
+				{
+					printf("ERROR malloc optResponseTimeout failed\n");
+					abort();
+				}
+				int millis = strtol(argv[i], NULL, 0);
+				optResponseTimeout->tv_sec = millis / 1000;
+				optResponseTimeout->tv_usec = (millis % 1000) * 1000;	// micro seconds
+			}
+			
+			if (! optResponseTimeout)
+			{
+				optHelp++;
+				i = argc;
+				break;
+			}
+		}
+
 		else
 		{	// Unknown option
 			printf("Unkown option: %s.\n", argv[i]);
@@ -739,16 +786,12 @@ int main(int argc, char *argv[])
 	
 	if (optByteTimeout)
 	{
-		byteTimeout.tv_sec = optByteTimeout / 1000;
-		byteTimeout.tv_usec = (optByteTimeout % 1000) * 1000;	// micro seconds
-		modbus_set_byte_timeout(ctx, &byteTimeout);
+		modbus_set_byte_timeout(ctx, optByteTimeout);
 	}
 
 	if (optResponseTimeout)
 	{
-		responseTimeout.tv_sec = optResponseTimeout / 1000;
-		responseTimeout.tv_usec = (optResponseTimeout % 1000) * 1000;	// micro seconds
-		modbus_set_response_timeout(ctx, &responseTimeout);
+		modbus_set_response_timeout(ctx, optResponseTimeout);
 	}
 	
 	if (optVerbose > 2)
