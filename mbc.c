@@ -50,6 +50,7 @@ Addr	Len	Parameter Name	Access	Func 	Data 	Unit
 
 ToDo:
 	* prefix output with timestamp of now
+	* several commandline options
 
 */
 
