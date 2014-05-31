@@ -499,7 +499,7 @@ void usage(void)
 {
 	printf("usage: \n"
 		"	-h			this help\n"
-		"	-v [-v ...]		verbose\n"
+		"	-v [n] [-v ...]		verbose\n"
 		"	* -i /dev/ttyUSB0	device\n"
 		"	* -s 1200,8,E,1		serial parameter\n"
 		"	* -sa nr		slave address\n"
@@ -509,8 +509,8 @@ void usage(void)
 		"	-setBaudrate n		set baudrate to either 1200, 2400, 4800, 9600\n"
 		"	-l			list register configuration\n"
 		"	-r 0x1,0x2,0x3,...	dump register\n"
-		"	* -bt n			byte timeout [ms]\n"
-		"	* -rt n			response timeout [ms]\n"
+		"	-bt n			byte timeout [ms]\n"
+		"	-rt n			response timeout [ms]\n"
 		"	-R n			report n\n"
 		"				1 Export Energy\n"
 		"				2 Current Volt and Current\n"
@@ -537,8 +537,29 @@ int main(int argc, char *argv[])
 		if (optVerbose > 3)
 			printf("Process commandline arg: argc=%d argv[%d]=%s.\n", argc, i, argv[i]);
 	
-		if (strncmp(argv[i], "-v", 2) == 0)
+		if (strcmp(argv[i], "-v") == 0)
+		{	// Verbose: -v [n]
 			optVerbose ++;
+
+			if (argc - i > 1)
+			{	// check for optional verbosity level
+				i++;
+				char *cp = NULL;
+				optVerbose = strtol(argv[i], &cp, 0);
+				
+				if (*cp != 0)
+				{
+					optVerbose = 0;
+				}
+			}
+
+			if (! optVerbose)
+			{
+				optHelp++;
+				i = argc;
+				break;
+			}			
+		}
 
 		else if (strcmp(argv[i], "-u") == 0)
 			optUnit ++;
