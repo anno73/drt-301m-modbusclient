@@ -18,6 +18,7 @@ meter default / slave address ist: 01
 
 
 ToDo:
+	* prevent multiple instances from interfering
 	* prefix output with timestamp of now
 	* several commandline options
 	* proper error handling 
@@ -45,7 +46,7 @@ regDef_s_t regDef[] = {
 	  { 0x0010,	2,	1,	 0,	"V",	"Voltage L1" }
 	, { 0x0012,	2,	1,	 0,	"V",	"Voltage L2" }
 	, { 0x0014,	2,	1,	 0,	"V",	"Voltage L3" }
-	, { 0x004E,	2,	1,	 0,	"Hz",	"Frequency" }
+	, { 0x004E,	2,	1,	 0,	"Hz",	"Frequency" }		// !
 	, { 0x0050,	2,	2,	-2,	"A",	"Current L1" }
 	, { 0x0052,	2,	2,	-2,	"A",	"Current L2" }
 	, { 0x0054,	2,	2,	-2,	"A",	"Current L3" }
@@ -499,7 +500,7 @@ void usage(void)
 		"				3 Power & cos phi\n"
 		"				* 4 Monthly reports\n"
 		"	For write operations:\n"
-		"		Unlock meter for write (no lock symbol)\n"
+		"		Unlock meter - no lock symbol on LCD\n"
 		"		Increase timeout values\n"
 	);
 	
