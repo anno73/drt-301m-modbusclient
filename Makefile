@@ -4,12 +4,12 @@ test: all
 
 all: mbc
 
-git: git_commit git_push
+git: git-commit git-push
 
-git_commit:
+git-commit:
 	git commit -a
 
-git_push:
+git-push:
 	git push origin master
 
 mbc: mbc.c
