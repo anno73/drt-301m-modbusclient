@@ -11,5 +11,9 @@ They all are interfaced via RS-485 serial interface with MODBus RTU protocol.
 
 The goal of this software is to have an easy possibility to interact with the meter, especially the energy and max demand counters.
 
+The original documentation has some errors in the register definition. These have been annotated in the PDF.
+
+modbusclient depends on libmodbus from libmodbus.org (libmodbus-3.0.6.tar.gz attached).
+
 ---
 2014-06-01
