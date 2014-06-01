@@ -8,15 +8,7 @@
 #include <math.h>
 
 /*
-
-
-2014-05-30	Initial release
-
--------------
-
-DRT301-M
-
-MODBUS RTU
+DRT-301M Multi Tariff Energy Meter with MODBUS RTU
 
 COM parameter Setting:
 Default: 1200bps, 8bits, EVEN, 1Stop bit
@@ -24,33 +16,17 @@ Default: 1200bps, 8bits, EVEN, 1Stop bit
 
 meter default / slave address ist: 01
 
-Protokoll Beispiel laut Hersteller - Modbus RTU:
-
-01 03 00 10 00 02 C5 CE
-
-01 Slave address
-03 Function code lesen (0x10 ist dann für register write)
-0010 register adresse Volt L1, 0012 ist z.B V L2, 0014 V L3 usw.
-0002 Counter register
-C5CE CRC
-
-Addr	Len	Parameter Name	Access	Func 	Data 	Unit
-					Code	Format
-0x0010	4	Voltage L1	R	03	Hex	V
-0x0012	4	Voltage L2	R	03	Hex	V
-0x0014	4	Voltage L3	R	03	Hex	V
-
-0x004E	4	Frequency	R	03	Hex	Hz
-
-0xF000	4	Time		R/W	03/10	BCD	s-m-h-w D-M-Y(-20)
-0xF600	4	Meter Number	R/W	03/10	Hex
-0xF700	30	Tariff		R/W	03/10	BCD
-0xF800	2	Baud Rate	W	10	Hex	1: 1200, ... 
-
 
 ToDo:
 	* prefix output with timestamp of now
 	* several commandline options
+	* proper error handling 
+	* proper error reporting
+
+	* Verbose structure bit select
+		2x MODBUS IO
+		Commandline Option Parsing
+		Intra Function logging
 
 */
 
@@ -163,6 +139,7 @@ regDef_s_t regDef[] = {
 };
 
 char optSetDate = 0;
+char optCheckDate = 0;
 int  optSetBaudrate = 0;
 char optUnit = 0;
 char optTitle = 0;
@@ -192,6 +169,9 @@ int serialDataBits;
 char serialParity;
 int serialStopBits;
 
+/**********************************************************************
+**********************************************************************/
+#if 0
 uint32_t read32(uint16_t addr)
 {
 	uint16_t tab16[2];
@@ -210,6 +190,7 @@ uint32_t read32(uint16_t addr)
 	
 	return q;
 }	// read32
+#endif
 
 /**********************************************************************
 **********************************************************************/
@@ -506,6 +487,7 @@ void usage(void)
 		"	-u			units of measure\n"
 		"	-t			title of register\n"
 		"	-setDate		set date on energy meter\n"
+		"	* -checkDate n		check date on energy meter and report if off more than n sec\n"
 		"	-setBaudrate n		set baudrate to either 1200, 2400, 4800, 9600\n"
 		"	-l			list register configuration\n"
 		"	-r 0x1,0x2,0x3,...	dump register\n"
@@ -516,6 +498,9 @@ void usage(void)
 		"				2 Current Volt and Current\n"
 		"				3 Power & cos phi\n"
 		"				* 4 Monthly reports\n"
+		"	For write operations:\n"
+		"		Unlock meter for write (no lock symbol)\n"
+		"		Increase timeout values\n"
 	);
 	
 	abort();
@@ -608,7 +593,6 @@ int main(int argc, char *argv[])
 				i = argc;
 			}
 		}
-
 		
 		else if (strcmp(argv[i], "-i") == 0)
 		{	// Set serial device
@@ -629,7 +613,6 @@ int main(int argc, char *argv[])
 				i = argc;
 			}
 		}
-		
 		
 		else if (strcmp(argv[i], "-r") == 0)
 		{	// Dump registers
@@ -687,7 +670,6 @@ int main(int argc, char *argv[])
 				break;
 			}
 		}	// -r
-
 		
 		else if (strcmp(argv[i], "-R") == 0)
 		{	// Print predefined report
