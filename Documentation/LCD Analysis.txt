@@ -1,0 +1,87 @@
+009224,61kWh  E -	this month
+009224,61kWh T1 -
+000000,00kWh T2 -
+000000,00kWh T3 -
+000000,00kWh T4 -
+
+009193,69kWh  E --	last month
+009193,69kWh T1 --
+000000,00kWh T2 --
+000000,00kWh T3 --
+000000,00kWh T4 --
+
+008972.72kwh  E ---	before last month
+008972.72kwh T1 ---
+000000.00kwh T2 ---
+000000.00kwh T3 ---
+000000.00kwh T4 ---
+
+02.3500kW MD  E -	this month
+02.3500kW MD T1 -
+00.0000kW MD T2 -
+00.0000kW MD T3 -
+00.0000kW MD T4 -
+
+03.2800kW MD E --	last month
+T1
+
+04.0200kW MD E ---	before last month
+T1
+
+0522:03:04 MD E -
+T1
+
+0504:21:13 MD E --
+T1
+
+0422:19:28 MD E ---
+T1
+
+0227 A V
+0231 B V
+0226 C V
+
+01.08 A A
+01.57 B A
+01.18 C A
+
+00.7315kW E
+00.2072kW A
+00.2691kW B
+00.2578kW C
+
+00
+
+00.20 E kvar
+00.08 A kvar
+00.08 B kvar
+00.03 C kvar
+
+17
+
+0.964 E			cos phi
+0.923 A
+0.952 B
+0.993 C
+
+00.7457 kVA E
+00.3114 kVA A
+00.2954 kVA B
+00.2603 kVA C
+
+50.00 Hz
+
+3.6V
+
+14.05.24		date YY.MM.DD
+03:42:25		time hh:mm:ss
+
+000400
+000000
+000001
+01:00
+0101
+00:00.01
+:
+:
+
