@@ -158,7 +158,7 @@ struct timeval byteTimeout, responseTimeout;
 
 char dateNow[] = "YYYY-MM-DD hh:mm:ss";
 
-#define defaultSerialDevice		"/dev/ttyUSB0"
+#define defaultSerialDevice		"/dev/DRT-301"
 #define defaultSerialBaud		1200
 #define defaultSerialDataBits	8
 #define defaultSerialParity		'E'
@@ -746,9 +746,15 @@ int main(int argc, char *argv[])
 
 	if (optHelp) usage();
 
+	if (! optSerialDevice)
+	{	// Set default serial device
+		serialDevice = strdup(defaultSerialDevice);		
+	} else {
+		serialDevice = strdup(optSerialDevice);
+	}
+
 	if (! optSerialParms)
 	{	// Set serial default parameters
-		serialDevice	= strdup(defaultSerialDevice);
 		serialBaud		= defaultSerialBaud;
 		serialDataBits	= defaultSerialDataBits;
 		serialParity	= defaultSerialParity;
