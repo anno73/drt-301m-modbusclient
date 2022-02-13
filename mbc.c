@@ -147,6 +147,7 @@ char optTitle = 0;
 char optReport = 0;
 char optHelp = 0;
 char optVerbose = 0;
+char optSlaveAddress = 0;
 char *optSerialParms = NULL;
 char *optSerialDevice = NULL;
 unsigned int *optRegsToDump = NULL;
@@ -158,17 +159,22 @@ struct timeval byteTimeout, responseTimeout;
 
 char dateNow[] = "YYYY-MM-DD hh:mm:ss";
 
+char compileDate[] = __DATE__;
+char compileTime[] = __TIME__;
+
 #define defaultSerialDevice		"/dev/DRT-301"
 #define defaultSerialBaud		1200
 #define defaultSerialDataBits	8
 #define defaultSerialParity		'E'
 #define defaultSerialStopBits	1
+#define defaultSlaveAddress		1
 
 char *serialDevice;
 int serialBaud;
 int serialDataBits;
 char serialParity;
 int serialStopBits;
+char slaveAddress = defaultSlaveAddress;
 
 char verbose;
 
@@ -484,13 +490,14 @@ void usage(void)
 	printf("usage: \n"
 		"	-h			this help\n"
 		"	-v [n] [-v ...]		verbose\n"
-		"	* -i /dev/ttyUSB0	device\n"
-		"	* -s 1200,8,E,1		serial parameter\n"
-		"	* -sa nr		slave address\n"
+		"	-V			version\n"
+		"	-i /dev/...		device (%s) - best a symlink to the real device via udev rule\n"
+		"	* -s 1200,8,E,1		not implemented yet - serial parameter (%d,%d,%c,%d)\n"
+		"	-sa nr			slave address (%d)\n"
 		"	-u			units of measure\n"
 		"	-t			title of register\n"
 		"	-setDate		set date on energy meter\n"
-		"	* -checkDate n		check date on energy meter and report if off more than n sec\n"
+		"	* -checkDate n		not implemented yet - check date on energy meter and report if off more than n sec\n"
 		"	-setBaudrate n		set baudrate to either 1200, 2400, 4800, 9600\n"
 		"	-l			list register configuration\n"
 		"	-r 0x1,0x2,0x3,...	dump register\n"
@@ -500,10 +507,15 @@ void usage(void)
 		"				1 Export Energy\n"
 		"				2 Current Volt and Current\n"
 		"				3 Power & cos phi\n"
-		"				* 4 Monthly reports\n"
+		"				* 4 Monthly reports - not implemented yet\n"
 		"	For write operations:\n"
 		"		Unlock meter - no lock symbol on LCD\n"
 		"		Increase timeout values\n"
+		"",
+		defaultSerialDevice,
+		defaultSerialBaud, defaultSerialDataBits, defaultSerialParity, defaultSerialStopBits,
+		defaultSlaveAddress
+		
 	);
 	
 	abort();
@@ -534,21 +546,20 @@ int main(int argc, char *argv[])
 
 			if (argc - i > 1)
 			{	// check for optional verbosity level
-		
-//				printf("optVerbose: %d verbose: %d argc: %d argv[i+1]: %s\n", optVerbose, verbose, argc, argv[i + 1]);
+				i++;
+//				printf("optVerbose: %d verbose: %d argc: %d argv[i+1]: %s\n", optVerbose, verbose, argc, argv[i]);
 
-				if (argv[i + 1][0] != '-')
+				if (argv[i][0] != '-')
 				{	// next command line parameter could be an unsigned integer
 					char temp;
 					char *cp = NULL;
-					temp = (char) strtol(argv[i + 1], &cp, 0);
+					temp = (char) strtol(argv[i], &cp, 0);
 
 //					printf("optVerbose: %d verbose: %d temp: %d cp: %p, *cp: %s\n", optVerbose, verbose, temp, cp, cp);
 					
 					if (*cp == '\0')
 					{	// success! whole parameter converted by strtol
 						verbose = temp;
-						i++;
 					} else {
 						optVerbose = 0;
 					}
@@ -556,17 +567,24 @@ int main(int argc, char *argv[])
 //					printf("optVerbose: %d verbose: %d temp: %d cp: %s\n", optVerbose, verbose, temp, cp);
 					
 				} else {
-//					printf("verbose next arg starts with '-': %s.\n", argv[i + 1]);
+//					printf("verbose next arg starts with '-': %s.\n", argv[i]);
+					i--;
 				}
 			}
 			
 			if (! optVerbose)
 			{
-				printf("Error in -v, strange value: '%s'.\n", argv[i + 1]);
+				printf("Error in -v, strange value: '%s'.\n", argv[i]);
 				optHelp++;
 				i = argc;
 				break;
 			}			
+		}
+		
+		else if (strcmp(argv[i], "-V") == 0)
+		{
+			printf("Compiled at: %s %s\n", compileDate, compileTime);
+			exit(0);
 		}
 
 		else if (strcmp(argv[i], "-u") == 0)
@@ -601,22 +619,6 @@ int main(int argc, char *argv[])
 			optHelp ++;
 
 		
-		else if (strcmp(argv[i], "-s") == 0)
-		{	// Set serial parameters
-			printf("-s not implemented yet\n"); abort();
-			
-			if (argc - i > 2)
-			{
-				optSerialParms = argv[i + 1];
-				i++;
-			}
-			else
-			{
-				optHelp++;
-				i = argc;
-			}
-		}
-		
 		else if (strcmp(argv[i], "-i") == 0)
 		{	// Set serial device
 			if (argc - i > 1)
@@ -636,7 +638,52 @@ int main(int argc, char *argv[])
 				i = argc;
 			}
 		}
+
+		else if (strcmp(argv[i], "-s") == 0)
+		{	// Set serial parameters
+			printf("-s not implemented yet. Always using %d,%d,%c,%d.\n", defaultSerialBaud, defaultSerialDataBits, defaultSerialParity, defaultSerialStopBits); abort();
+			
+			if (argc - i > 2)
+			{
+				optSerialParms = argv[i + 1];
+				i++;
+			}
+			else
+			{
+				optHelp++;
+				i = argc;
+			}
+		}
 		
+		else if (strcmp(argv[i], "-sa") == 0)
+		{	// Set slave address
+			// printf("-sa not implemented yet. Always using %d.\n", defaultSlaveAddress); abort();
+			optSlaveAddress++;
+			
+			char *cp = NULL;
+			
+			if (argc - i > 1)
+			{
+				i++;
+				slaveAddress = (char) strtol(argv[i], &cp, 0);
+				
+				if ((*cp != '\0') || (slaveAddress == 0))
+				{
+					printf("-sa strange parameter '%s'.\n", argv[i]);
+					optHelp++;
+					i = argc;
+				}
+			} 
+			
+			else {
+				printf("-sa requires parameter for slave address.\n");
+				optHelp++;
+				i = argc;
+			}
+			
+//			if (verbose > 2) printf("Set Slave Address to %d.\n", )
+		}
+
 		else if (strcmp(argv[i], "-r") == 0)
 		{	// Dump registers
 			if (argc - i > 1)
@@ -724,10 +771,13 @@ int main(int argc, char *argv[])
 				int millis = strtol(argv[i], NULL, 0);
 				optByteTimeout->tv_sec = millis / 1000;
 				optByteTimeout->tv_usec = (millis % 1000) * 1000;	// micro seconds
+			} else {
+				
 			}
 			
 			if (! optByteTimeout)
 			{
+				printf("-bt missing or invalid parameter.\n");
 				optHelp++;
 				i = argc;
 				break;
@@ -752,6 +802,7 @@ int main(int argc, char *argv[])
 			
 			if (! optResponseTimeout)
 			{
+				printf("-rt missing or invalid parameter.\n");
 				optHelp++;
 				i = argc;
 				break;
@@ -809,10 +860,11 @@ int main(int argc, char *argv[])
 	}
 
 	// Select slave to talk to
-	rc = modbus_set_slave(ctx, 1);
+	if (verbose > 2) printf("Set slave address to %d.\n", slaveAddress);
+	rc = modbus_set_slave(ctx, slaveAddress);
 	if (rc)
 	{
-		fprintf(stderr, "MODBUS set slave failed: %d, %s\n", rc, modbus_strerror(errno));
+		fprintf(stderr, "MODBUS set slave address to %d failed: %d, %s\n", slaveAddress, rc, modbus_strerror(errno));
 		exit(-1);
 	}
 	
