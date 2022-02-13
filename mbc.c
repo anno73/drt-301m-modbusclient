@@ -170,6 +170,8 @@ int serialDataBits;
 char serialParity;
 int serialStopBits;
 
+char verbose;
+
 /**********************************************************************
 **********************************************************************/
 #if 0
@@ -215,7 +217,7 @@ int setDate(modbus_t *_ctx, struct tm *_tm)
 	raw_tm->tm_year += 1900;
 	raw_tm->tm_mon  +=    1;
 	
-	if (optVerbose > 3)
+	if (verbose > 3)
 		printf("Set Time: %04d-%02d-%02d %02d:%02d:%02d\n", raw_tm->tm_year, raw_tm->tm_mon, raw_tm->tm_mday, raw_tm->tm_hour, raw_tm->tm_min, raw_tm->tm_sec);
 
 //	return 0;
@@ -248,13 +250,13 @@ int setDate(modbus_t *_ctx, struct tm *_tm)
 	int req_length = modbus_send_raw_request(ctx, raw_req, sizeof(raw_req));
 	int res_length = modbus_receive_confirmation(ctx, rsp);
 
-	if (optVerbose > 2)
+	if (verbose > 2)
 		printf("0x%04X REQ Length: %d RES Length: %d\n", 0xF000, req_length, res_length);
 
 	if (res_length <= 0)
 		return(-1);
 		
-	if (optVerbose > 2)
+	if (verbose > 2)
 	{
 		printf("0x%04X Response [", 0xF000);
 		for (int i = 0; i < res_length; i++)
@@ -279,7 +281,7 @@ int dumpRegister(unsigned int reg)
 	int i;
 
 	for (i = 0; regDef[i].regNr && (regDef[i].regNr != reg); i++)
-			if (optVerbose > 3)
+			if (verbose > 3)
 				printf("Search Register Definition: %04X, %d, %d, %d\n", regDef[i].regNr, regDef[i].regLen, regDef[i].regType, regDef[i].regBase10)
 	;
 	
@@ -294,10 +296,10 @@ int dumpRegister(unsigned int reg)
 	int reg_type = regDef[i].regType;
 	int reg_base = regDef[i].regBase10;
 
-	if (optVerbose > 3)
+	if (verbose > 3)
 		printf("Found Register Definition: %04X, %d, %d, %d\n", reg_addr, reg_size, reg_type, reg_base);
 
-	if (optVerbose > 3)
+	if (verbose > 3)
 		printf("To Dump %04X: reg_def[%d]=%04X, %d, %d, %d\n", reg, i, reg_addr, reg_size, reg_type, reg_base);
 
 	rc = modbus_read_registers(ctx, reg_addr, reg_size, dest);
@@ -318,7 +320,7 @@ int dumpRegister(unsigned int reg)
 		return(0);
 		break;
 	case 1:
-		if (optVerbose > 3)
+		if (verbose > 3)
 			printf("Unsigned Int Register:\n");
 			
 		ul = (dest[0] << 16) + dest[1];
@@ -336,7 +338,7 @@ int dumpRegister(unsigned int reg)
 		return(0);
 		break;
 	case 2:
-		if (optVerbose > 3)
+		if (verbose > 3)
 			printf("Float Register:\n");
 
 		f = dest[0];
@@ -357,14 +359,14 @@ int dumpRegister(unsigned int reg)
 		return(0);
 		break;
 	case 3:
-		if (optVerbose > 3)
+		if (verbose > 3)
 			printf("Time Register:\n");
 
 		printf("%02X%02X-%02X-%02X %02X:%02X:%02X %02X\n", bp[6], bp[7], bp[4], bp[5], bp[3], bp[0], bp[1], bp[2]);
 		return(0);
 		break;
 	case 4:
-		if (optVerbose > 3)
+		if (verbose > 3)
 			printf("Rate Summary:\n");
 
 		if (optTitle)
@@ -436,13 +438,13 @@ int setBaudrate(modbus_t * _ctx, int _baudrate)
 	int req_length = modbus_send_raw_request(ctx, raw_req, sizeof(raw_req));
 	int res_length = modbus_receive_confirmation(ctx, rsp);
 
-	if (optVerbose > 2)
+	if (verbose > 2)
 		printf("0x%04X REQ Length: %d RES Length: %d\n", 0xF000, req_length, res_length);
 
 	if (res_length <= 0)
 		return(-1);
 		
-	if (optVerbose > 2)
+	if (verbose > 2)
 	{
 		printf("0x%04X Response [", 0xF000);
 		for (int i = 0; i < res_length; i++)
@@ -520,27 +522,47 @@ int main(int argc, char *argv[])
 
 	for (int i = 1; i < argc; i++)
 	{	// Process commandline parameters
-		if (optVerbose > 3)
+		if (verbose > 3)
 			printf("Process commandline arg: argc=%d argv[%d]=%s.\n", argc, i, argv[i]);
 	
 		if (strcmp(argv[i], "-v") == 0)
 		{	// Verbose: -v [n]
-			optVerbose ++;
+			optVerbose = 1;
+			verbose ++;
+
+//			printf("optVerbose: %d verbose: %d argc: %d\n", optVerbose, verbose, argc);
 
 			if (argc - i > 1)
 			{	// check for optional verbosity level
-				i++;
-				char *cp = NULL;
-				optVerbose = strtol(argv[i], &cp, 0);
-				
-				if (*cp != 0)
-				{
-					optVerbose = 0;
+		
+//				printf("optVerbose: %d verbose: %d argc: %d argv[i+1]: %s\n", optVerbose, verbose, argc, argv[i + 1]);
+
+				if (argv[i + 1][0] != '-')
+				{	// next command line parameter could be an unsigned integer
+					char temp;
+					char *cp = NULL;
+					temp = (char) strtol(argv[i + 1], &cp, 0);
+
+//					printf("optVerbose: %d verbose: %d temp: %d cp: %p, *cp: %s\n", optVerbose, verbose, temp, cp, cp);
+					
+					if (*cp == '\0')
+					{	// success! whole parameter converted by strtol
+						verbose = temp;
+						i++;
+					} else {
+						optVerbose = 0;
+					}
+
+//					printf("optVerbose: %d verbose: %d temp: %d cp: %s\n", optVerbose, verbose, temp, cp);
+					
+				} else {
+//					printf("verbose next arg starts with '-': %s.\n", argv[i + 1]);
 				}
 			}
-
+			
 			if (! optVerbose)
 			{
+				printf("Error in -v, strange value: '%s'.\n", argv[i + 1]);
 				optHelp++;
 				i = argc;
 				break;
@@ -602,7 +624,7 @@ int main(int argc, char *argv[])
 				i++;
 				optSerialDevice = argv[i];
 				
-				if (optVerbose > 3)
+				if (verbose > 3)
 					printf("optSerialDevice: %s\n", optSerialDevice);
 			}
 			else
@@ -623,7 +645,7 @@ int main(int argc, char *argv[])
 				
 				i++;
 				
-				if (optVerbose > 3)
+				if (verbose > 3)
 					printf("optRegsToDump: registers: %s\n", argv[i]);
 
 //				countRegs = 0;
@@ -638,7 +660,7 @@ int main(int argc, char *argv[])
 					countRegs++;
 					long int li = strtol(cp, NULL, 0);	// convert ASCII dec, hex, oct to number
 				
-					if (optVerbose > 3)
+					if (verbose > 3)
 						printf("Token[%d]: %s %d %ld\n", countRegs, cp, strlen(cp), li);
 
 					// extend reg array by one and add new value to end
@@ -654,11 +676,11 @@ int main(int argc, char *argv[])
 				} while ((cp = strtok(NULL, ",")));
 
 				// Dump reg array
-				if (optVerbose > 3)
+				if (verbose > 3)
 					for (int i = 0; i < countRegs; i++)
 						printf("optRegsToDump[%02d] = %5d, %04X\n", i, optRegsToDump[i], optRegsToDump[i]);
 				
-				if (optVerbose > 3)
+				if (verbose > 3)
 					printf("optRegsToDump: %d\n", countRegs);
 			}
 			else
@@ -760,7 +782,7 @@ int main(int argc, char *argv[])
 		serialParity	= defaultSerialParity;
 		serialStopBits	= defaultSerialStopBits;
 		
-		if (optVerbose > 2)
+		if (verbose > 2)
 			printf("Serial: set default parameters: %s,%d,%d,%c,%d\n", 
 				serialDevice, serialBaud, serialDataBits, serialParity, serialStopBits);
 	}
@@ -776,7 +798,7 @@ int main(int argc, char *argv[])
 	}
 
 	modbus_set_debug(ctx, FALSE);
-	if (optVerbose > 1)
+	if (verbose > 1)
 		modbus_set_debug(ctx, TRUE);
 		
 	rc = modbus_connect(ctx);
@@ -806,7 +828,7 @@ int main(int argc, char *argv[])
 		modbus_set_response_timeout(ctx, optResponseTimeout->tv_sec, optResponseTimeout->tv_usec);
 	}
 	
-	if (optVerbose > 2)
+	if (verbose > 2)
 	{
 		uint32_t sec, usec;
 		// void modbus_set_byte_timeout(modbus_t *ctx, struct timeval *timeout);
