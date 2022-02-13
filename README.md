@@ -13,7 +13,7 @@ The goal of this software is to have an easy possibility to interact with the me
 
 The original documentation has some errors in the register definition. These have been annotated in the PDF.
 
-modbusclient depends on libmodbus from libmodbus.org (libmodbus-3.0.6.tar.gz attached).
+modbusclient depends on libmodbus from libmodbus.org (libmodbus-3.1.6.tar.gz attached).
 
 Possible future features:
 * Different output formats (csv, json)
@@ -26,4 +26,13 @@ Possible future features:
   * power, cos phi
 
 ---
+2022-02-13
+* upgrade to libmodbus-3.1.6
+* fix issues with parameter -i
+* fix issues with parameter -v
+* introduce parameter -V
+* introduce parameter -sa
+* other minor enhancements
+
 2014-11-18
+* Initial release
