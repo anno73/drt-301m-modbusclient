@@ -78,64 +78,64 @@ regDef_s_t regDef[] = {
 	, { 0x08D4,	2,	2,	-2,	"kWh",	"Export Energy Rate 3" }
 	, { 0x08D6,	2,	2,	-2,	"kWh",	"Export Energy Rate 4" }
 	, { 0xF000,	4,	3,	 0,	"",		"Time/Date" }
-    , { 0xF111,	10,	4,	-2,	"kWh",	"Last 1 month positive Energy" }
-    , { 0xF121,	10,	4,	-2,	"kWh",	"Last 2 month positive Energy" }
-    , { 0xF131,	10,	4,	-2,	"kWh",	"Last 3 month positive Energy" }
-    , { 0xF141,	10,	4,	-2,	"kWh",	"Last 4 month positive Energy" }
-    , { 0xF151,	10,	4,	-2,	"kWh",	"Last 5 month positive Energy" }
-    , { 0xF161,	10,	4,	-2,	"kWh",	"Last 6 month positive Energy" }
-    , { 0xF171,	10,	4,	-2,	"kWh",	"Last 7 month positive Energy" }
-    , { 0xF181,	10,	4,	-2,	"kWh",	"Last 8 month positive Energy" }
-    , { 0xF191,	10,	4,	-2,	"kWh",	"Last 9 month positive Energy" }
-    , { 0xF1A1,	10,	4,	-2,	"kWh",	"Last 10 month positive Energy" }
-    , { 0xF1B1,	10,	4,	-2,	"kWh",	"Last 11 month positive Energy" }
-    , { 0xF1C1,	10,	4,	-2,	"kWh",	"Last 12 month positive Energy" }
-    , { 0xF211,	10,	4,	-2,	"kWh",	"Last 1 month reverse Energy" }
-    , { 0xF221,	10,	4,	-2,	"kWh",	"Last 2 month reverse Energy" }
-    , { 0xF231,	10,	4,	-2,	"kWh",	"Last 3 month reverse Energy" }
-    , { 0xF241,	10,	4,	-2,	"kWh",	"Last 4 month reverse Energy" }
-    , { 0xF251,	10,	4,	-2,	"kWh",	"Last 5 month reverse Energy" }
-    , { 0xF261,	10,	4,	-2,	"kWh",	"Last 6 month reverse Energy" }
-    , { 0xF271,	10,	4,	-2,	"kWh",	"Last 7 month reverse Energy" }
-    , { 0xF281,	10,	4,	-2,	"kWh",	"Last 8 month reverse Energy" }
-    , { 0xF291,	10,	4,	-2,	"kWh",	"Last 9 month reverse Energy" }
-    , { 0xF2A1,	10,	4,	-2,	"kWh",	"Last 10 month reverse Energy" }
-    , { 0xF2B1,	10,	4,	-2,	"kWh",	"Last 11 month reverse Energy" }
-    , { 0xF2C1,	10,	4,	-2,	"kWh",	"Last 12 month reverse Energy" }
-    , { 0xF311,	10,	4,	-4,	"kW",	"Last 1 month positive max Demand" }
-    , { 0xF321,	10,	4,	-4,	"kW",	"Last 2 month positive max Demand" }
-    , { 0xF331,	10,	4,	-4,	"kW",	"Last 3 month positive max Demand" }
-    , { 0xF341,	10,	4,	-4,	"kW",	"Last 4 month positive max Demand" }
-    , { 0xF351,	10,	4,	-4,	"kW",	"Last 5 month positive max Demand" }
-    , { 0xF361,	10,	4,	-4,	"kW",	"Last 6 month positive max Demand" }
-    , { 0xF371,	10,	4,	-4,	"kW",	"Last 7 month positive max Demand" }
-    , { 0xF381,	10,	4,	-4,	"kW",	"Last 8 month positive max Demand" }
-    , { 0xF391,	10,	4,	-4,	"kW",	"Last 9 month positive max Demand" }
-    , { 0xF3A1,	10,	4,	-4,	"kW",	"Last 10 month positive max Demand" }
-    , { 0xF3B1,	10,	4,	-4,	"kW",	"Last 11 month positive max Demand" }
-    , { 0xF3C1,	10,	4,	-4,	"kW",	"Last 12 month positive max Demand" }
-    , { 0xF411,	10,	4,	-4,	"kW",	"Last 1 month reverse max Demand" }
-    , { 0xF421,	10,	4,	-4,	"kW",	"Last 2 month reverse max Demand" }
-    , { 0xF431,	10,	4,	-4,	"kW",	"Last 3 month reverse max Demand" }
-    , { 0xF441,	10,	4,	-4,	"kW",	"Last 4 month reverse max Demand" }
-    , { 0xF451,	10,	4,	-4,	"kW",	"Last 5 month reverse max Demand" }
-    , { 0xF461,	10,	4,	-4,	"kW",	"Last 6 month reverse max Demand" }
-    , { 0xF471,	10,	4,	-4,	"kW",	"Last 7 month reverse max Demand" }
-    , { 0xF481,	10,	4,	-4,	"kW",	"Last 8 month reverse max Demand" }
-    , { 0xF491,	10,	4,	-4,	"kW",	"Last 9 month reverse max Demand" }
-    , { 0xF4A1,	10,	4,	-4,	"kW",	"Last 10 month reverse max Demand" }
-    , { 0xF4B1,	10,	4,	-4,	"kW",	"Last 11 month reverse max Demand" }
-    , { 0xF4C1,	10,	4,	-4,	"kW",	"Last 12 month reverse max Demand" }
-
+	, { 0xF111,	10,	4,	-2,	"kWh",	"Last 1 month positive Energy" }
+	, { 0xF121,	10,	4,	-2,	"kWh",	"Last 2 month positive Energy" }
+	, { 0xF131,	10,	4,	-2,	"kWh",	"Last 3 month positive Energy" }
+	, { 0xF141,	10,	4,	-2,	"kWh",	"Last 4 month positive Energy" }
+	, { 0xF151,	10,	4,	-2,	"kWh",	"Last 5 month positive Energy" }
+	, { 0xF161,	10,	4,	-2,	"kWh",	"Last 6 month positive Energy" }
+	, { 0xF171,	10,	4,	-2,	"kWh",	"Last 7 month positive Energy" }
+	, { 0xF181,	10,	4,	-2,	"kWh",	"Last 8 month positive Energy" }
+	, { 0xF191,	10,	4,	-2,	"kWh",	"Last 9 month positive Energy" }
+	, { 0xF1A1,	10,	4,	-2,	"kWh",	"Last 10 month positive Energy" }
+	, { 0xF1B1,	10,	4,	-2,	"kWh",	"Last 11 month positive Energy" }
+	, { 0xF1C1,	10,	4,	-2,	"kWh",	"Last 12 month positive Energy" }
+	, { 0xF211,	10,	4,	-2,	"kWh",	"Last 1 month reverse Energy" }
+	, { 0xF221,	10,	4,	-2,	"kWh",	"Last 2 month reverse Energy" }
+	, { 0xF231,	10,	4,	-2,	"kWh",	"Last 3 month reverse Energy" }
+	, { 0xF241,	10,	4,	-2,	"kWh",	"Last 4 month reverse Energy" }
+	, { 0xF251,	10,	4,	-2,	"kWh",	"Last 5 month reverse Energy" }
+	, { 0xF261,	10,	4,	-2,	"kWh",	"Last 6 month reverse Energy" }
+	, { 0xF271,	10,	4,	-2,	"kWh",	"Last 7 month reverse Energy" }
+	, { 0xF281,	10,	4,	-2,	"kWh",	"Last 8 month reverse Energy" }
+	, { 0xF291,	10,	4,	-2,	"kWh",	"Last 9 month reverse Energy" }
+	, { 0xF2A1,	10,	4,	-2,	"kWh",	"Last 10 month reverse Energy" }
+	, { 0xF2B1,	10,	4,	-2,	"kWh",	"Last 11 month reverse Energy" }
+	, { 0xF2C1,	10,	4,	-2,	"kWh",	"Last 12 month reverse Energy" }
+	, { 0xF311,	10,	4,	-4,	"kW",	"Last 1 month positive max Demand" }
+	, { 0xF321,	10,	4,	-4,	"kW",	"Last 2 month positive max Demand" }
+	, { 0xF331,	10,	4,	-4,	"kW",	"Last 3 month positive max Demand" }
+	, { 0xF341,	10,	4,	-4,	"kW",	"Last 4 month positive max Demand" }
+	, { 0xF351,	10,	4,	-4,	"kW",	"Last 5 month positive max Demand" }
+	, { 0xF361,	10,	4,	-4,	"kW",	"Last 6 month positive max Demand" }
+	, { 0xF371,	10,	4,	-4,	"kW",	"Last 7 month positive max Demand" }
+	, { 0xF381,	10,	4,	-4,	"kW",	"Last 8 month positive max Demand" }
+	, { 0xF391,	10,	4,	-4,	"kW",	"Last 9 month positive max Demand" }
+	, { 0xF3A1,	10,	4,	-4,	"kW",	"Last 10 month positive max Demand" }
+	, { 0xF3B1,	10,	4,	-4,	"kW",	"Last 11 month positive max Demand" }
+	, { 0xF3C1,	10,	4,	-4,	"kW",	"Last 12 month positive max Demand" }
+	, { 0xF411,	10,	4,	-4,	"kW",	"Last 1 month reverse max Demand" }
+	, { 0xF421,	10,	4,	-4,	"kW",	"Last 2 month reverse max Demand" }
+	, { 0xF431,	10,	4,	-4,	"kW",	"Last 3 month reverse max Demand" }
+	, { 0xF441,	10,	4,	-4,	"kW",	"Last 4 month reverse max Demand" }
+	, { 0xF451,	10,	4,	-4,	"kW",	"Last 5 month reverse max Demand" }
+	, { 0xF461,	10,	4,	-4,	"kW",	"Last 6 month reverse max Demand" }
+	, { 0xF471,	10,	4,	-4,	"kW",	"Last 7 month reverse max Demand" }
+	, { 0xF481,	10,	4,	-4,	"kW",	"Last 8 month reverse max Demand" }
+	, { 0xF491,	10,	4,	-4,	"kW",	"Last 9 month reverse max Demand" }
+	, { 0xF4A1,	10,	4,	-4,	"kW",	"Last 10 month reverse max Demand" }
+	, { 0xF4B1,	10,	4,	-4,	"kW",	"Last 11 month reverse max Demand" }
+	, { 0xF4C1,	10,	4,	-4,	"kW",	"Last 12 month reverse max Demand" }
+	
 	, { 0xF500,	 2,	5, 	 0,	"",		"Intervals & Times" }
 	, { 0xF600,	 0,	6,	 0,	"", 	"!!! Meter Number" }	// ! Not working?
 	, { 0xF700,	15,	7,	 0,	"",		"Tariff" }
-
+	
 	, { 0xF800,	 2,	1,	 0,	"Baud",	"!!!Baudrate" }	// ! Baudrate write only?
-          
-    , { 0xFA01,	10,	4,	-4,	"kW",	"Current month positive max Demand" }
-    , { 0xFB01,	10,	4,	-4,	"kW",	"Current month reverse max Demand" }
-
+		
+	, { 0xFA01,	10,	4,	-4,	"kW",	"Current month positive max Demand" }
+	, { 0xFB01,	10,	4,	-4,	"kW",	"Current month reverse max Demand" }
+	
 	, { 0x0000,	0,	0,	 0,	"",		"" }
 };
 
