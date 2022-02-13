@@ -790,19 +790,27 @@ int main(int argc, char *argv[])
 	
 	if (optByteTimeout)
 	{
-		modbus_set_byte_timeout(ctx, optByteTimeout);
+		// modbus_set_byte_timeout(ctx, optByteTimeout);	####
+		modbus_set_byte_timeout(ctx, optByteTimeout->tv_sec, optByteTimeout->tv_usec);
 	}
 
 	if (optResponseTimeout)
 	{
-		modbus_set_response_timeout(ctx, optResponseTimeout);
+		// modbus_set_response_timeout(ctx, optResponseTimeout); ####
+		modbus_set_response_timeout(ctx, optResponseTimeout->tv_sec, optResponseTimeout->tv_usec);
 	}
 	
 	if (optVerbose > 2)
 	{
-	// void modbus_set_byte_timeout(modbus_t *ctx, struct timeval *timeout);
-		modbus_get_byte_timeout(ctx, &byteTimeout);
-		modbus_get_response_timeout(ctx, &responseTimeout);
+		uint32_t sec, usec;
+		// void modbus_set_byte_timeout(modbus_t *ctx, struct timeval *timeout);
+		modbus_get_byte_timeout(ctx, &sec, &usec);
+		byteTimeout.tv_sec = sec;
+		byteTimeout.tv_usec = usec;
+		// modbus_get_response_timeout(ctx, &responseTimeout);	####
+		modbus_get_response_timeout(ctx, &sec, &usec);
+		responseTimeout.tv_sec = sec;
+		responseTimeout.tv_usec = usec;
 		
 		printf("MODBUS Byte Timeout: %lus %luus\n", byteTimeout.tv_sec, byteTimeout.tv_usec);
 		printf("MODBUS Response Timeout: %lus %luus\n", responseTimeout.tv_sec, responseTimeout.tv_usec);
