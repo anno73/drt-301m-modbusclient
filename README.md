@@ -15,6 +15,18 @@ The original documentation has some errors in the register definition. These hav
 
 modbusclient depends on libmodbus from libmodbus.org (libmodbus-3.1.6.tar.gz attached).
 
+Add udev rules to /etc/udev/rules.d/10-modbus.rules (in my case a FT232 based adapter):
+
+```ACTION=="add", SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{serial}==".....", SYMLINK+="DRT-301"```
+
+Get these values via ```udevadm info -a -p $( udevadm info -q path -n /dev/ttyUSB0 ) | less```
+
+Test the configuration with ```udevadm test $( udevadm info -q path -n /dev/ttyUSB0 ) 2>&1 | less```
+
+Force reload with ```udevadm control --reload-rules && udevadm trigger -attr-match=subsystem=tty```
+
+
+
 Possible future features:
 * Different output formats (csv, json)
 * csv table headers optional
