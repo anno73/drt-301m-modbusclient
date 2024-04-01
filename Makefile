@@ -14,3 +14,6 @@ git-push:
 
 mbc: mbc.c
 	gcc -Wall -std=gnu99 mbc.c -o mbc -lmodbus -lm
+
+clean:
+	rm mbc
