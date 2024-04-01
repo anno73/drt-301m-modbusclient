@@ -708,7 +708,7 @@ int main(int argc, char *argv[])
 					long int li = strtol(cp, NULL, 0);	// convert ASCII dec, hex, oct to number
 				
 					if (verbose > 3)
-						printf("Token[%d]: %s %d %ld\n", countRegs, cp, strlen(cp), li);
+						printf("Token[%d]: %s %ld %ld\n", countRegs, cp, strlen(cp), li);
 
 					// extend reg array by one and add new value to end
 					unsigned int *ui_p = realloc(optRegsToDump, countRegs * sizeof(*optRegsToDump));
